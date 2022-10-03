@@ -2,14 +2,10 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatDialog, } from '@angular/material/dialog';
-import { HttpClient, } from '@angular/common/http';
-import { SharedService } from 'src/app/core/services/shared-service/shared.service';
 import { Sort } from '@angular/material/sort';
-import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RequestApiService } from 'src/app/core/request-service/request-api.service';
 import { SnackbarService } from 'src/app/core/snack-bar/snackbar.service';
-import { AuthenticationService } from 'src/app/core/request-service/auth/authentication.service';
 import { ProjectListDialogComponent } from '../project-list-dialog/project-list-dialog.component';
 @Component({
   selector: 'app-application',
