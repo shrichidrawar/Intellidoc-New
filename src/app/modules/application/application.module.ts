@@ -7,11 +7,13 @@ import { FormRenderSubmissionComponent } from './form-render-submission/form-ren
 import { ViewFormComponent } from './view-form/view-form.component';
 import { MaterialModule } from '../Material/material.module';
 import { FormsModule,ReactiveFormsModule } from '@angular/forms';
+import { ProjectListDialogComponent } from './project-list-dialog/project-list-dialog.component';
 @NgModule({
   declarations: [
     ApplicationComponent,
     FormRenderSubmissionComponent,
-    ViewFormComponent
+    ViewFormComponent,
+    ProjectListDialogComponent
   ],
   imports: [
     CommonModule,

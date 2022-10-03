@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { RequestApiService } from 'src/app/core/request-service/request-api.service';
 import { SnackbarService } from 'src/app/core/snack-bar/snackbar.service';
 import { AuthenticationService } from 'src/app/core/request-service/auth/authentication.service';
+import { ProjectListDialogComponent } from '../project-list-dialog/project-list-dialog.component';
 @Component({
   selector: 'app-application',
   templateUrl: './application.component.html',
@@ -17,28 +18,22 @@ import { AuthenticationService } from 'src/app/core/request-service/auth/authent
 })
 
 export class ApplicationComponent implements OnInit {
-  displayedColumns: string[] = ['projectName','formName', 'submittedBy', 'status', 'submittedOn', 'action'];
+  displayedColumns: string[] = ['projectName', 'formName', 'submittedBy', 'status', 'submittedOn', 'action'];
   dataSource: any = new MatTableDataSource([]);
-
-  myControl: FormControl = new FormControl();
 
   FormList: any;
   deleteFormId: any;
-  projectsList: any;
-  filteredOptions: any;
-  options = [];
-  formName: any;
+  username: any;
   tableFetchedData: any;
   pageSize: any;
   pageIndex: any;
-  username: any;
   totalDocCount: any;
-  specific:any;
+  specific: any;
 
   tableData: any = {
     name: null,
     status: null,
-    projectName : null,
+    projectName: null,
     startDate: null,
     endDate: null,
     by: null,
@@ -46,12 +41,12 @@ export class ApplicationComponent implements OnInit {
     size: 10,
     sortingField: "name",
     sortingOrder: false
-}
+  }
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(private Http: HttpClient, private service: SharedService, public dialog: MatDialog, private router: Router, private apiRequest: RequestApiService, private snackbar: SnackbarService, private authenticationService: AuthenticationService) {
-    
+  constructor(private apiRequest: RequestApiService, private snackbar: SnackbarService,
+    private dialog: MatDialog, private router: Router) {
     const UI = JSON.parse(localStorage.getItem('__UI')!);
     this.username = UI.userName;
     this.specificuserpatient();
@@ -59,31 +54,29 @@ export class ApplicationComponent implements OnInit {
 
   ngOnInit(): void {
     this.specificuserpatient();
-    this.getSSPEnabledForms();
-    this.initForm();
   }
 
   // calling api for all submitted forms
-  
-  specificuserpatient(){
-    if(this.username){
-      this.apiRequest.getPatientForms(this.username).subscribe((res:any)=>{
-        if(res && res.detail && res.detail.length){
-          this.FormList=res.detail;
-          this.dataSource=new MatTableDataSource(this.FormList);
-          this.dataSource.paginator=this.paginator;
+
+  specificuserpatient() {
+    if (this.username) {
+      this.apiRequest.getPatientForms(this.username).subscribe((res: any) => {
+        if (res && res.detail && res.detail.length) {
+          this.FormList = res.detail;
+          this.dataSource = new MatTableDataSource(this.FormList);
+          this.dataSource.paginator = this.paginator;
         }
       })
     }
-    else if(!this.username){
-      this.apiRequest.getAllSubmittedForms().subscribe((res:any)=>{
-        if(res && res.detail && res.detail.length){
-          this.FormList=res.detail;
-          this.dataSource=new MatTableDataSource(this.FormList);
-          this.dataSource.paginator=this.paginator;
+    else if (!this.username) {
+      this.apiRequest.getAllSubmittedForms().subscribe((res: any) => {
+        if (res && res.detail && res.detail.length) {
+          this.FormList = res.detail;
+          this.dataSource = new MatTableDataSource(this.FormList);
+          this.dataSource.paginator = this.paginator;
         }
-      },error =>{
-        this.snackbar.open('Failed To Fetch the Form List ..!','',{type:'warning'});
+      }, error => {
+        this.snackbar.open('Failed To Fetch the Form List ..!', '', { type: 'warning' });
       })
     }
   }
@@ -103,57 +96,9 @@ export class ApplicationComponent implements OnInit {
     // })
   }
 
-  //for calling list of self service enabled projects 
-  getSSPEnabledForms() {
-
-    this.apiRequest.getSSPEnabledProjects(this.username).subscribe((res:any) => {
-      if (res && res.detail && res.detail.length) {
-        this.projectsList = res.detail;
-        console.log(this.projectsList);
-      }
-    }, error => {
-      this.snackbar.open('Failed To Fetch the Form List ...!', '', { type: 'warning' });
-    })
-  }
-
-  render() {
-    this.router.navigate(['./home/application/render-form'])
-
-  }
-
-  
-
-  initForm() {
-    this.myControl.valueChanges
-      .pipe()
-      .subscribe(response => {
-        if (response) {
-          this.filterData(response);
-        } else {
-          this.filteredOptions = this.options;
-        }
-      })
-  }
-
-  filterData(enteredData: string) {
-    this.filteredOptions = this.options.filter((item: any) => {
-      return item.toLowerCase().indexOf(enteredData.toLowerCase()) > -1
-    })
-  }
-
-
-  selected(e: any) {
-    for (var projects of this.projectsList) {
-      if (projects.project == e.option.value) {
-        this.formName = projects.selfServiceForm;
-      }
-    }
-    this.service.sendFormName(this.formName,e.option.value);
-  }
-
   // filter for table
 
-  private formatDate(dateObj:any) {
+  private formatDate(dateObj: any) {
     let givenDate = new Date(dateObj);
     let month = givenDate.getMonth() + 1;
     let days = givenDate.getDate();
@@ -161,11 +106,11 @@ export class ApplicationComponent implements OnInit {
     return dateFormat;
   }
 
-  searchByFilter(searchFilter:any) {
+  searchByFilter(searchFilter: any) {
     const obj = {
       name: this.tableData.name,
       by: this.tableData.by,
-      projectName:this.tableData.projectName,
+      projectName: this.tableData.projectName,
       status: this.tableData.status,
       startDate: this.formatDate(this.tableData.startDate),
       endDate: this.formatDate(this.tableData.endDate),
@@ -178,23 +123,22 @@ export class ApplicationComponent implements OnInit {
   }
 
   fetchTableData() {
-    this.apiRequest.searchFilter(this.tableData).subscribe((res:any) => {
-      console.log(res);
+    this.apiRequest.searchFilter(this.tableData).subscribe((res: any) => {
       this.tableFetchedData = res;
-      
+
       this.dataSource.data = this.tableFetchedData.detail.submittedForms;
       this.totalDocCount = this.tableFetchedData.detail.totalDocument;
       this.pageIndex = this.tableFetchedData.detail.currentPage;
     })
   }
 
-  pageSizeChange(tableFilter:any) {
+  pageSizeChange(tableFilter: any) {
     this.tableData.size = tableFilter.pageSize;
     this.tableData.page = tableFilter.pageIndex;
     this.fetchTableData();
   }
 
-  clearFilter(filterBy:any) {
+  clearFilter(filterBy: any) {
     filterBy.projectName = '',
       filterBy.name = '',
       filterBy.status = [],
@@ -218,10 +162,15 @@ export class ApplicationComponent implements OnInit {
     this.fetchTableData();
   }
 
-  getSSPEnabledProjects(searchKey:any) {
-    return this.projectsList.filter((proj:any) => proj.project.toLowerCase( ).includes(searchKey.toLowerCase( )) )
-  }
+  openDialog() {
+    const dialogRef = this.dialog.open(ProjectListDialogComponent);
 
+    dialogRef.afterClosed().subscribe((result: boolean) => {
+      if (result) {
+        this.router.navigate(['/home/application/render-form'])
+      }
+    });
+  }
 }
 
 
