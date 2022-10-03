@@ -1,0 +1,113 @@
+mat-sidenav-container {
+    height: 100%;
+    background-color: #f1f1f1;
+
+    .mat-toolbar {
+        background-color: white;
+        padding-top: 3px;
+    }
+
+    mat-sidenav {
+        background-color: white;
+
+        mat-nav-list {
+            .menu-item {
+                margin-left: 8px;
+            }
+
+            .chevron-button {
+                transition: 300ms ease-in-out;
+                transform: rotate(0deg);
+                right: 17px;
+                float: right;
+                position: absolute;
+                border-radius: 70%;
+                background-color: #667dff;
+            }
+
+
+            .chevron-button.rotated {
+                transform: rotate(180deg);
+            }
+
+            img.img-fluid {
+                height: 24px;
+                width: 24px;
+                margin-left: 3px;
+            }
+
+            .row-color {
+                border-bottom: 2px solid #e87033;
+                margin-top: -1px;
+            }
+
+            .active {
+                border-right: 3px solid #667dff !important;
+                margin-top: 3px;
+            }
+        }
+    }
+}
+
+.mat-toolbar {
+    height: 58px;
+}
+
+hr {
+    margin: 1px;
+    color: inherit;
+    background-color: currentColor;
+    border: 0;
+    opacity: .25;
+}
+
+.navigation-bar {
+    position: inherit;
+    top: 0px;
+    z-index: 101;
+    height: 54px;
+}
+
+.link {
+    cursor: pointer;
+}
+
+.example-spacer {
+    flex: 1 1 auto;
+}
+
+.text-font {
+    font-family: 'Montserrat', sans-serif;
+}
+
+.logout-color {
+    color: #e87033;
+}
+
+.btn-collapse-icon {
+    position: absolute;
+    bottom: 15px;
+    right: 10px;
+}
+
+.btn-collapse-icon {
+    color: #fff;
+}
+
+mat-list-item span {
+    margin: 0px 5px;
+    font-size: 14px;
+    padding: 0px 10px;
+}
+
+.foregroundColor {
+    background: #f7f7f7;
+    color: #9e9e9e;
+    cursor: pointer;
+}
+
+.devider_vertical {
+    height: 35px;
+    display: inline-block;
+    border-right: 1px solid #ccc !important;
+}
